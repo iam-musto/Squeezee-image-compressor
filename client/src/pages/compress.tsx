@@ -9,7 +9,7 @@ import { useCompressContext } from "../context/compressContext";
 
 const CompressPage = () => {
   const [quality, setQuality] = useState<number>(80);
-  const [format, setFormat] = useState<"jpeg" | "png" | "webp">("jpeg");
+  const [format, setFormat] = useState<"jpeg" | "png" | "webp" | "avif" | "heic">("jpeg");
 
   const {
     selectedFiles,
