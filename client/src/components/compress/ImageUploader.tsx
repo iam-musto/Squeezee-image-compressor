@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { ImagePlus, Image, X } from "lucide-react";
+import heic2any from "heic2any";
 import Button from "../common/Button";
 import type { ImageUploaderProps } from "../../types";
 import { formatSize } from "../../utils/formatSize";
@@ -11,6 +12,20 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
 
+  // Convert HEIC file to JPEG blob for preview
+  const convertHeicForPreview = async (file: File): Promise<string> => {
+    try {
+      if (file.type === "image/heic" || file.type === "image/heif") {
+        const blob = await heic2any({ blob: file });
+        return URL.createObjectURL(blob as Blob);
+      }
+    } catch (error) {
+      console.error("Error converting HEIC:", error);
+    }
+    // Fallback to original file if conversion fails
+    return URL.createObjectURL(file);
+  };
+
   // Cleanup preview URLs on unmount and when images change
   useEffect(() => {
     return () => {
@@ -21,10 +36,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   useEffect(() => {
     // Generate preview URLs for selected files
     if (selectedFiles && selectedFiles.length > 0) {
-      const urls = selectedFiles.map((file) => URL.createObjectURL(file));
-      setImagePreviewUrls(urls);
+      (async () => {
+        const urls = await Promise.all(
+          selectedFiles.map((file) => convertHeicForPreview(file)),
+        );
+        setImagePreviewUrls(urls);
+      })();
       return () => {
-        urls.forEach((url) => URL.revokeObjectURL(url));
+        imagePreviewUrls.forEach((url) => URL.revokeObjectURL(url));
       };
     } else {
       setImagePreviewUrls([]);
@@ -126,7 +145,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
               <div className="aspect-square overflow-hidden mb-2">
                 <img
-                  src={URL.createObjectURL(file)}
+                  src={imagePreviewUrls[index]}
                   alt={`Selected ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
@@ -202,7 +221,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           className="hidden"
         />
         <p className="text-sm text-stone-500 mt-4">
-          Supports: JPG, PNG, WebP, GIF, and more
+          Supports: JPG, PNG, WebP, HEIC, AVIF, GIF, and more
         </p>
       </div>
     </div>

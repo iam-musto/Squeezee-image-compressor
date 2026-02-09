@@ -11,6 +11,6 @@ export interface CompressContextType {
   compressImages: (
     files: File[],
     quality: number,
-    format: "jpeg" | "png" | "webp",
+    format: "jpeg" | "png" | "webp" | "avif" | "heic",
   ) => Promise<void>;
 }

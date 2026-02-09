@@ -2,7 +2,7 @@ import sharp from "sharp";
 
 interface CompressOptions {
   quality: number;
-  format: "jpeg" | "png" | "webp";
+  format: "jpeg" | "png" | "webp" | "avif" | "heic";
 }
 
 export const compressImage = async (
@@ -10,9 +10,19 @@ export const compressImage = async (
   options: CompressOptions,
 ) => {
   try {
-    let image = sharp(buffer);
+    let image = sharp(buffer, { failOnError: false });
     const metadata = await image.metadata();
     console.log(`Image dimensions: ${metadata.width}x${metadata.height}`);
+    console.log(`Image format: ${metadata.format}`);
+
+    // Handle HEIC input by converting to intermediate format first
+    const format = metadata.format as string;
+    if (format === "heic" || format === "heif") {
+      console.log("Converting HEIC/HEIF to intermediate format...");
+      // Convert to JPEG buffer first
+      image = sharp(buffer).toFormat("jpeg");
+      image = sharp(await image.toBuffer());
+    }
 
     // Resize large images to reduce file size
     if (metadata.width && metadata.width > 2000) {
@@ -41,6 +51,12 @@ export const compressImage = async (
         break;
       case "webp":
         image = image.webp({ quality: options.quality });
+        break;
+      case "avif":
+        image = image.avif({ quality: options.quality });
+        break;
+      case "heic":
+        image = image.heif({ quality: options.quality });
         break;
       default:
         throw new Error("Unsupported format");

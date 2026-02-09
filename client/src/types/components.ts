@@ -13,8 +13,8 @@ export interface ImagePreviewProps {
 export interface CompressSettingsProps {
   quality: number;
   onQualityChange: (quality: number) => void;
-  format: "jpeg" | "png" | "webp";
-  onFormatChange: (format: "jpeg" | "png" | "webp") => void;
+  format: "jpeg" | "png" | "webp" | "avif" | "heic";
+  onFormatChange: (format: "jpeg" | "png" | "webp" | "avif" | "heic") => void;
 }
 
 export interface ButtonProps {

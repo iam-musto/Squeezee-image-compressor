@@ -1,7 +1,7 @@
 export interface CompressionRequest {
   files: File[];
   quality: number;
-  format: "jpeg" | "png" | "webp";
+  format: "jpeg" | "png" | "webp" | "avif" | "heic";
 }
 
 export interface CompressedFile {

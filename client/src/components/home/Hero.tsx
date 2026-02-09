@@ -10,8 +10,7 @@ const Hero = () => {
           {/* Text Content */}
           <div className="text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-black mb-6">
-              Compress Your Images
-              <span className="block mt-2">Instantly</span>
+              Compress Your Images Instantly
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-stone-600 mb-8">
               Fast, free, and secure image compression. All processing happens

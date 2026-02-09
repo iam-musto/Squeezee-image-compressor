@@ -18,7 +18,7 @@ export const CompressProvider: React.FC<{ children: ReactNode }> = ({
   const compressImages = async (
     files: File[],
     quality: number,
-    format: "jpeg" | "png" | "webp",
+    format: "jpeg" | "png" | "webp" | "avif" | "heic",
   ) => {
     try {
       setIsLoading(true);

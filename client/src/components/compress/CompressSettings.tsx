@@ -46,13 +46,17 @@ const CompressSettings: React.FC<CompressSettingsProps> = ({
           <select
             value={format}
             onChange={(e) =>
-              onFormatChange(e.target.value as "jpeg" | "png" | "webp")
+              onFormatChange(
+                e.target.value as "jpeg" | "png" | "webp" | "avif" | "heic",
+              )
             }
             className="w-full p-3 border-2 border-black bg-stone-100 text-black focus:outline-none focus:ring-2 focus:ring-black"
           >
             <option value="jpeg">JPEG</option>
             <option value="png">PNG</option>
             <option value="webp">WebP</option>
+            <option value="avif">AVIF</option>
+            <option value="heic">HEIC</option>
           </select>
         </div>
       </div>
